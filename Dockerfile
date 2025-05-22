@@ -35,3 +35,18 @@ CMD ["node", "index.js"]
 # Create ECR(Amazon Elastic Container Registry) repository in AWS    
 
 # Use/Update the pipeline to build and push the image to AWS ECR repository
+
+
+
+# Create webhook in github
+# --------------------------
+# 1.Go to project settings and select Create webhook
+
+# 2.For payload URL confgiure Jenkins URL
+
+# 	http://jenkins.raj82s.online:8080/github-webhook/
+
+# 3.Provide content-type as application/json
+# 4.Enable or disbale SSL
+# 5.select events you would like to trigger this webhook?
+# 6.In Jenkins enable the option "Github hook trigger for GITScm polling"
