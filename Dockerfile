@@ -18,7 +18,7 @@ CMD ["node", "index.js"]
 
 # 32-backend repo code for backend to create CI/CD
 
-# setup Jenkina Master and gent EC2 instances using 31-cicd-tools which is terraform code
+# setup Jenkins Master and Agent EC2 instances using 31-cicd-tools which is terraform code
 # Configure Agent Node
 # Add the required plugins 
 
@@ -50,3 +50,10 @@ CMD ["node", "index.js"]
 # 4.Enable or disbale SSL
 # 5.select events you would like to trigger this webhook?
 # 6.In Jenkins enable the option "Github hook trigger for GITScm polling"
+
+#For CI CD
+# In Jenkins Create job for 32-backend repo under INFRA-->BACKEND-->backend-ci folder 
+
+# url https://github.com/DAWS-2025-82S/32-backend.git
+
+# Run the backend-ci to trigger image and push to ECR
