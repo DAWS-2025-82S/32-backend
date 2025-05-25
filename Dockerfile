@@ -52,7 +52,7 @@ CMD ["node", "index.js"]
 # 6.In Jenkins enable the option "Github hook trigger for GITScm polling"
 
 #For CI CD
-# In Jenkins Create job for 32-backend repo under INFRA-->BACKEND-->backend-ci folder 
+# In Jenkins Create job for 32-backend repo under EXPENSE-->BACKEND-->backend-ci folder 
 
 # url https://github.com/DAWS-2025-82S/32-backend.git
 
