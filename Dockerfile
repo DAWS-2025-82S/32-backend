@@ -16,6 +16,13 @@ USER expense
 COPY --from=builder /opt/backend /opt/backend
 CMD ["node", "index.js"]
 
+
+# When scanning backend image in ECR in AWS got error for the base Image "node:20.18.3-alpine3.21"
+
+# 	UnsupportedImageError: The Operating system alpine v3.21 is not supported
+
+# To fix this update the base image to node:23-alpine
+
 # 32-backend repo code for backend to create CI/CD
 
 # setup Jenkins Master and Agent EC2 instances using 31-cicd-tools which is terraform code
