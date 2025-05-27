@@ -9,12 +9,12 @@ samplePipeline(configMap)
 
 
 
-// def configMap = [
-//     project: "expense",
-//     component: "backend"
-// ]
+def configMap2 = [
+    project: "expense",
+    component: "backend"
+]
 
-// nodeJSEKSPipeline(configMap)
+nodeJSEKSPipeline(configMap2)
 
 
 
