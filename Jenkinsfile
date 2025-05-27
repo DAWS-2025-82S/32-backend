@@ -1,11 +1,11 @@
 @Library('jenkins-shared-library')_
 
 
-def configMap = [
-    greeting: "Hello,calling JENKINS Shared Library using Groovy"
-]
+// def configMap = [
+//     greeting: "Hello,calling JENKINS Shared Library using Groovy"
+// ]
 
-samplePipeline(configMap)
+// samplePipeline(configMap)
 
 
 
@@ -16,6 +16,10 @@ def configMap2 = [
 
 nodeJSEKSPipeline(configMap2)
 
+
+// Will get error below if both samplePipeline and nodeJSEKSPipeline are invoked
+
+// java.lang.IllegalStateException: Only one pipeline { ... } block can be executed in a single run.
 
 
 
