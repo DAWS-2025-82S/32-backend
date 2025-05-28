@@ -17,7 +17,7 @@ def configMap2 = [
 //nodeJSEKSPipeline(configMap2)
 
 if ( ! env.BRANCH_NAME.equalsIgnoreCase('main')){
-    nodeJSEKSPipeline(configMap2S)
+    nodeJSEKSPipeline(configMap2)
 }
 else{
     echo "Please follow production process"
