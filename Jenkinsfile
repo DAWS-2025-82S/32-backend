@@ -14,7 +14,14 @@ def configMap2 = [
     component: "backend"
 ]
 
-nodeJSEKSPipeline(configMap2)
+//nodeJSEKSPipeline(configMap2)
+
+if ( ! env.BRANCH_NAME.equalsIgnoreCase('main')){
+    nodeJSEKSPipeline(configMap2S)
+}
+else{
+    echo "Please follow production process"
+}
 
 
 // Will get error below if both samplePipeline and nodeJSEKSPipeline are invoked
