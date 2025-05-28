@@ -1,51 +1,90 @@
-@Library('jenkins-shared-library')_
+pipeline {
+    agent { label 'AGENT-1' }
+    environment { 
+        PROJECT = 'expense'
+        COMPONENT = 'backend'
+        appVersion = ''
+        ACC_ID = '311141550186'
+    }
+    options {
+        disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
+    }
+    parameters{
+        booleanParam(name: 'deploy', defaultValue: false, description: 'Toggle this value')
+    }
+    stages {
+        stage('Read Version') {
+            steps {
+               script{
+                 def packageJson = readJSON file: 'package.json'
+                 appVersion = packageJson.version
+                 echo "Version is: $appVersion"
+               }
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+               script{ 
+                 sh """
+                    npm install
+                 """
+               }
+            }
+        }
+        /* stage('Run Sonarqube') {
+            environment {
+                scannerHome = tool 'sonar-scanner-7.1';
+            }
+            steps {
+              withSonarQubeEnv('sonar-scanner-7.1') {
+                sh "${scannerHome}/bin/sonar-scanner"
+                // This is generic command works for any language
+              }
+            }
+        }
+        stage("Quality Gate") {
+            steps {
+              timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: true
+              }
+            }
+        } */
+        stage('Docker Build') {
+            steps {
+               script{
+                withAWS(region: 'us-east-1', credentials: 'aws-creds') {
+                    sh """
+                    aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com
 
+                    docker build -t  ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${appVersion} .
 
-// def configMap = [
-//     greeting: "Hello,calling JENKINS Shared Library using Groovy"
-// ]
-
-// samplePipeline(configMap)
-
-
-
-def configMap2 = [
-    project: "expense",
-    component: "backend"
-]
-
-nodeJSEKSPipeline(configMap2)
-
-
-// Will get error below if both samplePipeline and nodeJSEKSPipeline are invoked
-
-// java.lang.IllegalStateException: Only one pipeline { ... } block can be executed in a single run.
-
-
-
-
-// Create repo for JenkinsSharedLibrary
-
-// https://github.com/DAWS-2025-82S/37-jenkins-shared-library.git
-
-// Add the 37-jenkins-shared-library repo in Jenkins
-
-// Go to Manage Jenkins --> Tools --> Global Trusted Pipeline Libraries and then add
-
-// Libraray Name: jenkins-shared-library
-// Default Version: maint
-// Enable load Implicitly
-// Retrival Method: Modern scm
-// configure git repo url https://github.com/DAWS-2025-82S/37-jenkins-shared-library.git
-
-// call the shared library from backend CI(32-backend) pipeline
-
-// # import the library configured in Manage Jenkins
-// @Library('jenkins-shared-library')_
-
-// def configMap = [
-//     project: "expense",
-//     component: "backend"
-// ]
-
-// nodeJSEKSPipeline(configMap)
+                    docker push ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${appVersion}
+                    """
+                }
+                 
+               }
+            }
+        }
+        stage('Trigger Deploy'){
+            when { 
+                expression { params.deploy }
+            }
+            steps{
+                build job: 'backend-cd', parameters: [string(name: 'version', value: "${appVersion}")], wait: true
+            }
+        }
+    }
+    post { 
+        always { 
+            echo 'I will always say Hello again!'
+            deleteDir()
+        }
+        failure { 
+            echo 'I will run when pipeline is failed'
+        }
+        success { 
+            echo 'I will run when pipeline is success'
+        }
+    }
+}
