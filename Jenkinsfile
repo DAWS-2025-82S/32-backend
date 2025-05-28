@@ -14,7 +14,8 @@ def configMap2 = [
     component: "backend"
 ]
 
-nodeJSEKSPipeline(configMap2)
+// commented to disable triggering for main branch
+//nodeJSEKSPipeline(configMap2)
 
 
 // Will get error below if both samplePipeline and nodeJSEKSPipeline are invoked
